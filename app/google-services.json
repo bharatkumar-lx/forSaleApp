@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "590090880903",
+    "project_id": "forsale-5d348",
+    "storage_bucket": "forsale-5d348.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590090880903:android:3dcd7706526984680ff522",
+        "android_client_info": {
+          "package_name": "com.bharat.forsale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "590090880903-7317uv0q7hp1o7sbns93c92lq2esnmf0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ8wd72_dewXx6rO3M9abikd5ynC_HU4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "590090880903-7317uv0q7hp1o7sbns93c92lq2esnmf0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
