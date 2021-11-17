@@ -2,11 +2,9 @@ package com.bharat.forsale.ui.fragment;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.bharat.forsale.databinding.FragmentSignUpBinding;
 import com.bharat.forsale.ui.MainActivity;
-import com.bharat.forsale.ui.viewModels.FirebaseViewModel;
+import com.bharat.forsale.viewModels.FirebaseViewModel;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpFragment extends Fragment{
 
