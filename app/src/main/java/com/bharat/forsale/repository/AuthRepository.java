@@ -1,19 +1,12 @@
-package com.bharat.forsale.ui.repository;
+package com.bharat.forsale.repository;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AuthRepository{
     private Application application;
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
 
     public AuthRepository(Application application) {
@@ -36,6 +29,10 @@ public class AuthRepository{
 
     public boolean isLoggedIn(){
         return firebaseAuth.getCurrentUser() != null;
+    }
+
+    public void signOut(){
+        firebaseAuth.signOut();
     }
 
 }

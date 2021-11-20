@@ -1,4 +1,4 @@
-package com.bharat.forsale.ui.model;
+package com.bharat.forsale.model;
 
 import com.google.firebase.firestore.Exclude;
 

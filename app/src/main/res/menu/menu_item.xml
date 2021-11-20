@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    <item-->
-<!--        android:title="Search"-->
-<!--        android:id="searchFragment"/>-->
-<!--    <item-->
-<!--        android:title="Watch List"-->
-<!--        android:id="@+id/watchFragment"-->
-<!--        />-->
-<!--    <item-->
-<!--        android:title="Post"-->
-<!--        android:id="@+id/postFragment"-->
-<!--        />-->
-<!--    <item-->
-<!--        android:title="Watch List"-->
-<!--        android:id="@+id/accountFragment"-->
-<!--        />-->
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.MainActivity">
+    <item
+        android:title="SignOut"
+        android:id="@+id/signOutMenu"
+        app:showAsAction="never"/>
 </menu>

@@ -1,4 +1,4 @@
-package com.bharat.forsale.ui.viewModels;
+package com.bharat.forsale.viewModels;
 
 import android.app.Application;
 

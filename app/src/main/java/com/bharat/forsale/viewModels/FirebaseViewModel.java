@@ -1,14 +1,14 @@
-package com.bharat.forsale.ui.viewModels;
+package com.bharat.forsale.viewModels;
 
 import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.lifecycle.ViewModel;
-import com.bharat.forsale.ui.repository.AuthRepository;
+import com.bharat.forsale.repository.AuthRepository;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FirebaseViewModel extends ViewModel {
+public class FirebaseViewModel extends ViewModel  {
     final private Application application;
     private final AuthRepository authRepository;
 
@@ -50,6 +50,14 @@ public class FirebaseViewModel extends ViewModel {
         return authRepository.isLoggedIn();
     }
 
+    public void signOut(){
+        if(isLoggedIn()) {
+            authRepository.signOut();
+            Toast.makeText(application, "Signed out", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(application,"Log in first",Toast.LENGTH_LONG).show();
+        }
+    }
 
 
 }

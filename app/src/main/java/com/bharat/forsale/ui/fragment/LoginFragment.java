@@ -1,5 +1,6 @@
 package com.bharat.forsale.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,8 @@ import android.view.ViewGroup;
 import com.bharat.forsale.R;
 import com.bharat.forsale.databinding.FragmentLoginBinding;
 import com.bharat.forsale.ui.MainActivity;
-import com.bharat.forsale.ui.viewModels.FirebaseViewModel;
+import com.bharat.forsale.ui.SearchActivity;
+import com.bharat.forsale.viewModels.FirebaseViewModel;
 
 public class LoginFragment extends Fragment {
 
@@ -40,6 +43,12 @@ public class LoginFragment extends Fragment {
 
         binding.signUpButton.setOnClickListener(view1 -> {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_signUpFragment);
+        });
+
+        binding.loginForgetButton.setOnClickListener(view1 ->{
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
 
     }

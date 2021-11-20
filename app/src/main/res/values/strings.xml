@@ -5,4 +5,8 @@
     <string name="login_text">Enter email</string>
     <string name="password">Enter password(8 Character minimum)</string>
     <string name="login">Login</string>
+    <!--    fragments-->
+    <string name="watchlist_fragment">watch</string>
+    <string name="search_fragment">Search</string>
+    <string name="post_fragment">Post</string>
 </resources>
