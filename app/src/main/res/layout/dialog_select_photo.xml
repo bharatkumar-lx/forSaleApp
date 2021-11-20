@@ -8,16 +8,20 @@
         android:layout_height="50dp"
         android:text="Select from the Storage"
         android:textSize="15sp"
-        android:gravity="center_vertical"
+        android:gravity="center"
+        android:padding="5dp"
         android:id="@+id/dialogOpenStorage"
+        android:layout_margin="2dp"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Select from the Storage"
+        android:text="Take form Camera"
         android:textSize="15sp"
-        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:layout_margin="2dp"
+        android:gravity="center"
         android:id="@+id/dialogOpenCamera"
         android:layout_below="@+id/dialogOpenStorage"
         />

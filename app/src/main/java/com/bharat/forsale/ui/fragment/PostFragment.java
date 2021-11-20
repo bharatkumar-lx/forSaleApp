@@ -1,6 +1,7 @@
 package com.bharat.forsale.ui.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +26,9 @@ import com.bharat.forsale.util.forsaleUtilites;
 
 public class PostFragment extends Fragment {
     private ActivityResultLauncher<String[]> permissionLauncher;
+    private ActivityResultLauncher<Intent> intentSenderLauncher;
     private FragmentPostBinding binding ;
+    String TAG = "PostFragment";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,31 +40,12 @@ public class PostFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        permissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestMultiplePermissions(),
-                result -> {
-                    if(!forsaleUtilites.hasPermission(getContext())) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("Permission Required")
-                                .setMessage("Storage and camera permission require to work " +
-                                        "click on ok to grant permission from setting")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
-                                        intent.setData(uri);
-                                        startActivity(intent);
-                                    }
-                                }).setNegativeButton("Cancel", ((dialogInterface, i) -> {
-                                    dialogInterface.cancel();
-                                })).show();
-                    }
-                }
-        );
+        setPermissionLauncher();
         binding.postImage.setOnClickListener(view1 -> {
             requestPermissions();
-
+            SelectPhotoDialog s = new SelectPhotoDialog();
+            s.show(getChildFragmentManager(),null);
+            Log.d(TAG, "onViewCreated: "+ s.imageUri);
         });
     }
 
@@ -90,5 +74,43 @@ public class PostFragment extends Fragment {
             permissionLauncher.launch(permissions);
         }
     }
+
+
+    private void setIntentSenderLauncher(){
+        intentSenderLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == Activity.RESULT_OK){
+                        startActivity(result.getData());
+                    }
+                }
+        );
+    }
+
+    private void setPermissionLauncher(){
+        permissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                result -> {
+                    if(!forsaleUtilites.hasPermission(getContext())) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Permission Required")
+                                .setMessage("Storage and camera permission require to work " +
+                                        "click on ok to grant permission from setting")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+                                        intent.setData(uri);
+                                        startActivity(intent);
+                                    }
+                                }).setNegativeButton("Cancel", ((dialogInterface, i) -> {
+                            dialogInterface.cancel();
+                        })).show();
+                    }
+                }
+        );
+    }
+
 
 }

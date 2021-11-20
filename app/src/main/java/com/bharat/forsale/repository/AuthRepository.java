@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class AuthRepository{
     private Application application;
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
 
     public AuthRepository(Application application) {
