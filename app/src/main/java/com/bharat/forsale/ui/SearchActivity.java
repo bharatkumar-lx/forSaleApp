@@ -2,6 +2,7 @@ package com.bharat.forsale.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.bharat.forsale.ui.fragment.PostFragment;
 import com.bharat.forsale.ui.fragment.SearchFragment;
 import com.bharat.forsale.ui.fragment.WatchlistFragment;
 import com.bharat.forsale.viewModels.FirebaseViewModel;
+import com.bharat.forsale.viewModels.FirebaseViewModelFactory;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
         setupViewPagerAdapter();
-        firebaseViewModel = new FirebaseViewModel(getApplication());
+        FirebaseViewModelFactory factory = new FirebaseViewModelFactory(getApplication());
+        firebaseViewModel = new ViewModelProvider(this,factory).get(FirebaseViewModel.class);
     }
 
     @Override
@@ -66,7 +69,6 @@ public class SearchActivity extends AppCompatActivity {
             Log.d(TAG, "setupViewPagerAdapter: "+ position);
             tab.setText(tabList.get(position));
 //            tab.setCustomView(selectionPagerAdapter.createFragment(position).getView());
-
         }).attach();
     }
 }

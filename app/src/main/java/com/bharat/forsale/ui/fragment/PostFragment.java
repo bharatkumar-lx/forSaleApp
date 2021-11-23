@@ -1,11 +1,9 @@
 package com.bharat.forsale.ui.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,7 +17,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.bharat.forsale.R;
 import com.bharat.forsale.databinding.FragmentPostBinding;
 import com.bharat.forsale.ui.dialogFragment.SelectPhotoDialog;
 import com.bharat.forsale.util.forsaleUtilites;
@@ -28,7 +28,11 @@ public class PostFragment extends Fragment {
     private ActivityResultLauncher<String[]> permissionLauncher;
     private ActivityResultLauncher<Intent> intentSenderLauncher;
     private FragmentPostBinding binding ;
+    private String imageUri;
+    private byte[] imageByteArray;
     String TAG = "PostFragment";
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,12 +45,7 @@ public class PostFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setPermissionLauncher();
-        binding.postImage.setOnClickListener(view1 -> {
-            requestPermissions();
-            SelectPhotoDialog s = new SelectPhotoDialog();
-            s.show(getChildFragmentManager(),null);
-            Log.d(TAG, "onViewCreated: "+ s.imageUri);
-        });
+        binding.postImage.setOnClickListener(this::onClick);
     }
 
     private void resetFields(){
@@ -62,7 +61,9 @@ public class PostFragment extends Fragment {
     private void showProgressBar(){
         binding.progressBar.setVisibility(View.VISIBLE);
     }
-
+    private void hideProgressBar(){
+        binding.progressBar.setVisibility(View.GONE);
+    }
 
     private void requestPermissions(){
         String[] permissions = {
@@ -75,17 +76,6 @@ public class PostFragment extends Fragment {
         }
     }
 
-
-    private void setIntentSenderLauncher(){
-        intentSenderLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if(result.getResultCode() == Activity.RESULT_OK){
-                        startActivity(result.getData());
-                    }
-                }
-        );
-    }
 
     private void setPermissionLauncher(){
         permissionLauncher = registerForActivityResult(
@@ -112,5 +102,17 @@ public class PostFragment extends Fragment {
         );
     }
 
-
+    private void onClick(View buttonView) {
+        requestPermissions();
+        SelectPhotoDialog s = new SelectPhotoDialog();
+        s.show(getChildFragmentManager(), getString(R.string.photo_dialog));
+        getChildFragmentManager().setFragmentResultListener("1", getViewLifecycleOwner(),
+                (requestKey, result) -> {
+                   if(result.get("image") != null){
+                    imageByteArray = result.getByteArray("image");
+                       Log.d(TAG, "onClick: "+ imageByteArray);
+                   }else if(result.get("imageUri") != null){
+                   }
+                });
+    }
 }

@@ -19,4 +19,7 @@ public class forsaleUtilites {
                 ContextCompat.checkSelfPermission(context,permission[2]) == PackageManager.PERMISSION_GRANTED );
     }
 
+
+
+
 }

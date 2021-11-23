@@ -9,4 +9,5 @@
     <string name="watchlist_fragment">watch</string>
     <string name="search_fragment">Search</string>
     <string name="post_fragment">Post</string>
+    <string name="photo_dialog">Select Photo</string>
 </resources>

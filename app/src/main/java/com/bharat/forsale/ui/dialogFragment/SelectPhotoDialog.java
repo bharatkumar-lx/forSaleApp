@@ -1,10 +1,10 @@
 package com.bharat.forsale.ui.dialogFragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +17,20 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bharat.forsale.databinding.DialogSelectPhotoBinding;
+import com.bharat.forsale.viewModels.FirebaseViewModel;
+import com.bharat.forsale.viewModels.FirebaseViewModelFactory;
+
 
 public class SelectPhotoDialog extends DialogFragment {
     private DialogSelectPhotoBinding dialogBinding;
     private ActivityResultLauncher<Intent> imageLauncher;
     private ActivityResultLauncher takePhoto;
-    public Uri imageUri;
+    private Uri imageUri;
+    private Bundle bundle = new Bundle();;
+    private FirebaseViewModel firebaseViewModel;
 
     @Nullable
     @Override
@@ -36,24 +42,32 @@ public class SelectPhotoDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        FirebaseViewModelFactory factory = new FirebaseViewModelFactory(getActivity().getApplication());
+        firebaseViewModel = new ViewModelProvider(this,factory).get(FirebaseViewModel.class);
         imageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         Intent i = result.getData();
                         imageUri = i.getData();
+                        bundle.putByteArray("image", firebaseViewModel.bytesFromUri(imageUri));
                         dismiss();
                     }
                 });
 
         takePhoto = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), result -> {
+            bundle.putByteArray("image", firebaseViewModel.bytesFromBitmap(result,90));
             dismiss();
         });
         dialogBinding.dialogOpenStorage.setOnClickListener(view1 -> showStorage());
         dialogBinding.dialogOpenCamera.setOnClickListener(view1 -> openCamera());
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        getParentFragmentManager().setFragmentResult("1",bundle);
+    }
 
     void showStorage(){
         Log.d("PhotoDialog", "onViewCreated: openStorage Clicked");
@@ -64,6 +78,11 @@ public class SelectPhotoDialog extends DialogFragment {
 
     void openCamera(){
         takePhoto.launch(null);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
     }
 
 }
