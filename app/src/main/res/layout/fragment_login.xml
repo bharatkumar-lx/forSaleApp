@@ -71,6 +71,15 @@
             app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/loginForgetButton"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
+
+
 
 
 </LinearLayout>

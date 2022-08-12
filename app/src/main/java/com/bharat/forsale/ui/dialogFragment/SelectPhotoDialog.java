@@ -3,8 +3,10 @@ package com.bharat.forsale.ui.dialogFragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,14 +25,16 @@ import com.bharat.forsale.databinding.DialogSelectPhotoBinding;
 import com.bharat.forsale.viewModels.FirebaseViewModel;
 import com.bharat.forsale.viewModels.FirebaseViewModelFactory;
 
+import java.io.IOException;
 
 public class SelectPhotoDialog extends DialogFragment {
     private DialogSelectPhotoBinding dialogBinding;
     private ActivityResultLauncher<Intent> imageLauncher;
-    private ActivityResultLauncher takePhoto;
+    private ActivityResultLauncher<Void> takePhoto;
     private Uri imageUri;
-    private Bundle bundle = new Bundle();;
+    private final Bundle bundle = new Bundle();
     private FirebaseViewModel firebaseViewModel;
+    private final String TAG = "photoDialog";
 
     @Nullable
     @Override
@@ -45,15 +49,26 @@ public class SelectPhotoDialog extends DialogFragment {
         FirebaseViewModelFactory factory = new FirebaseViewModelFactory(getActivity().getApplication());
         firebaseViewModel = new ViewModelProvider(this,factory).get(FirebaseViewModel.class);
         imageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
+                        Log.d(TAG,"inside the result activity");
                         Intent i = result.getData();
                         imageUri = i.getData();
-                        bundle.putByteArray("image", firebaseViewModel.bytesFromUri(imageUri));
+                        Log.d(TAG,imageUri.getPath());
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),imageUri);
+                            bundle.putByteArray("image", firebaseViewModel.bytesFromBitmap(bitmap,90));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+//                        bundle.putByteArray("image", firebaseViewModel.bytesFromUri(imageUri));
                         dismiss();
                     }
-                });
+                }
+        );
 
         takePhoto = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), result -> {
             bundle.putByteArray("image", firebaseViewModel.bytesFromBitmap(result,90));
@@ -69,7 +84,7 @@ public class SelectPhotoDialog extends DialogFragment {
         getParentFragmentManager().setFragmentResult("1",bundle);
     }
 
-    void showStorage(){
+    void showStorage() {
         Log.d("PhotoDialog", "onViewCreated: openStorage Clicked");
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("Image/*");

@@ -4,10 +4,11 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,35 +18,44 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bharat.forsale.R;
 import com.bharat.forsale.databinding.FragmentPostBinding;
 import com.bharat.forsale.ui.dialogFragment.SelectPhotoDialog;
 import com.bharat.forsale.util.forsaleUtilites;
+import com.bharat.forsale.viewModels.FirebaseViewModel;
+import com.bharat.forsale.viewModels.FirebaseViewModelFactory;
+import com.bumptech.glide.Glide;
+
 
 public class PostFragment extends Fragment {
     private ActivityResultLauncher<String[]> permissionLauncher;
-    private ActivityResultLauncher<Intent> intentSenderLauncher;
     private FragmentPostBinding binding ;
-    private String imageUri;
+    private FirebaseViewModel firebaseViewModel;
     private byte[] imageByteArray;
-    String TAG = "PostFragment";
+//    private final String TAG = "PostFragment";
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPostBinding.inflate(inflater,container,false);
-        Log.d("PostFragment", "Post Fragment is started");
+        setPermissionLauncher();
+        assert getActivity()  != null;
+        FirebaseViewModelFactory factory = new FirebaseViewModelFactory(getActivity().getApplication());
+        firebaseViewModel = new ViewModelProvider(this,factory).get(FirebaseViewModel.class);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setPermissionLauncher();
         binding.postImage.setOnClickListener(this::onClick);
+        binding.btnPost.setOnClickListener(view1 -> {
+            post();
+            showProgressBar();
+        });
     }
 
     private void resetFields(){
@@ -102,17 +112,43 @@ public class PostFragment extends Fragment {
         );
     }
 
+    //Fixme : image is processing on background thread but ui thread gets update until  background done it's work
     private void onClick(View buttonView) {
         requestPermissions();
         SelectPhotoDialog s = new SelectPhotoDialog();
         s.show(getChildFragmentManager(), getString(R.string.photo_dialog));
+        //gets result from child photoDialog Fragment
+
         getChildFragmentManager().setFragmentResultListener("1", getViewLifecycleOwner(),
                 (requestKey, result) -> {
                    if(result.get("image") != null){
-                    imageByteArray = result.getByteArray("image");
-                       Log.d(TAG, "onClick: "+ imageByteArray);
-                   }else if(result.get("imageUri") != null){
+                       imageByteArray = result.getByteArray("image");
+                       BitmapFactory.Options options = new BitmapFactory.Options();
+                       options.inMutable = true;
+                       Bitmap bmp = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, options);
+                       Glide.with(binding.getRoot()).load(bmp).into(binding.postImage);
                    }
                 });
+    }
+
+    private void post(){
+        setText();
+        firebaseViewModel.post(imageByteArray,
+                binding.inputTitle.getText().toString(),
+                binding.inputDescription.getText().toString(),
+                binding.inputPrice.getText().toString(),
+                binding.inputCountry.getText().toString(),
+                binding.inputStateProvince.getText().toString(),
+                binding.inputCity.getText().toString(),
+                binding.inputEmail.getText().toString());
+    }
+    private void setText(){
+                binding.inputTitle.setText("title");
+                binding.inputDescription.setText("des");
+                binding.inputPrice.setText("price");
+                binding.inputCountry.setText("country");
+                binding.inputStateProvince.setText("province");
+                binding.inputCity.setText("city");
+                binding.inputEmail.setText("email");
     }
 }

@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,9 @@ public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
     private FirebaseViewModel firebaseViewModel;
+    private final String TAG = "LoginFragment";
     @Override
+    @NonNull
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -32,33 +33,40 @@ public class LoginFragment extends Fragment {
         return binding.getRoot();
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        firebaseViewModel = ((MainActivity)getActivity()).firebaseViewModel;
+        assert getActivity() != null;
+        firebaseViewModel =((MainActivity)getActivity()).firebaseViewModel;
+        binding.progressBar.setVisibility(View.GONE);
+
         binding.loginButton.setOnClickListener(view1 -> {
-            Log.d("LogInFragment","log in button pressed");
+            Log.d(TAG,"log in button pressed");
             logIn();
         });
-
         binding.signUpButton.setOnClickListener(view1 -> {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_signUpFragment);
-        });
 
+        });
         binding.loginForgetButton.setOnClickListener(view1 ->{
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            moveToSearch();
         });
-
     }
 
-    private void logIn(){
-        Log.d("LogInFragment","log in status "+ firebaseViewModel.isLoggedIn());
+    protected void logIn(){
         String email = binding.loginIdText.getText().toString();
         String password = binding.loginPassword.getText().toString();
         firebaseViewModel.logIn(email,password);
+        binding.progressBar.setVisibility(View.VISIBLE);
     }
+
+    private void moveToSearch(){
+        Intent intent = new Intent(getActivity(), SearchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
 
 
 

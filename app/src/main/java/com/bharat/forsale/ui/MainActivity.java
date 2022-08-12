@@ -1,19 +1,11 @@
 package com.bharat.forsale.ui;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 
-import com.bharat.forsale.R;
-import com.bharat.forsale.adapter.SelectionPagerAdapter;
 import com.bharat.forsale.databinding.ActivityMainBinding;
 import com.bharat.forsale.viewModels.FirebaseViewModel;
 import com.bharat.forsale.viewModels.FirebaseViewModelFactory;
@@ -30,6 +22,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         FirebaseViewModelFactory factory = new FirebaseViewModelFactory(getApplication());
         firebaseViewModel = new ViewModelProvider(this,factory).get(FirebaseViewModel.class);
+        if(firebaseViewModel.isLoggedIn()){
+            Intent intent = new Intent(this,SearchActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

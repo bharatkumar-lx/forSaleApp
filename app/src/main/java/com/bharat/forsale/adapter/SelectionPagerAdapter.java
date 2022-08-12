@@ -11,12 +11,13 @@ import java.util.List;
 
 public class SelectionPagerAdapter extends FragmentStateAdapter {
     private static final String TAG = "SelectionPagerAdapter";
-    private final List<Fragment> fragmentList = new ArrayList<>();
+    private final List<Fragment> fragmentList;
 
 
 
     public SelectionPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
+        fragmentList = new ArrayList<>();
     }
 
     @NonNull
