@@ -118,7 +118,7 @@ public class PostFragment extends Fragment {
 
         );
     }
-
+//another change
     //Fixme : image is processing on background thread but ui thread gets update until  background done it's work
     private void onClick(View buttonView) {
         requestPermissions();
